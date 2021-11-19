@@ -1,10 +1,11 @@
+from mbo.algorithm import Algorithm
+import opti
+import pandas as pd
 import sklearn.base
 
 from bumblebo.utils import select_model_from_sklearn
 
-from mbo.algorithm import Algorithm
 
-import opti
 
 
 class BumbleBO(Algorithm):
@@ -27,3 +28,6 @@ class BumbleBO(Algorithm):
         y = self.problem.data[self.problem.outputs.names]
 
         self.model.fit(X, y)
+
+    def predict(self, X: pd.DataFrame) -> pd.DataFrame:
+        self.model.predict(X)

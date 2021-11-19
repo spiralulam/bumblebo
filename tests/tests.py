@@ -1,5 +1,6 @@
 from bumblebo import BumbleBO
 from opti.problems import Zakharov
+import sklearn
 
 
 def test_continuous_single_objective_unconstrained():
@@ -13,7 +14,12 @@ def test_continuous_single_objective_unconstrained():
 
     bbo = BumbleBO(problem=test_problem, params_surrogate=params_surrogate)
 
+    # This function returns None, if the model is fitted and raises an NotFittedError otherwise
+    assert sklearn.utils.validation.check_is_fitted(bbo.model) is None
 
+    X_pred = bbo.problem.data[bbo.problem.inputs.names]
+    y_pred = bbo.model.predict(X_pred)
+    assert len(y_pred) == len(X_pred)
 
 
 def test_wrong_surrogate_model():
