@@ -1,4 +1,6 @@
-from bumblebo.utils import check_if_surrogate_model_is_in_sklearn, select_model_from_sklearn
+import sklearn.base
+
+from bumblebo.utils import select_model_from_sklearn
 
 from mbo.algorithm import Algorithm
 
@@ -16,7 +18,7 @@ class BumbleBO(Algorithm):
                 "name": "LinearRegression"
             }
 
-        check_if_surrogate_model_is_in_sklearn(self.params_surrogate["name"])
+        self.model: sklearn.base.BaseEstimator = select_model_from_sklearn(self.params_surrogate["name"])
 
         self._fit_model()
 
@@ -24,5 +26,4 @@ class BumbleBO(Algorithm):
         X = self.problem.data[self.problem.inputs.names]
         y = self.problem.data[self.problem.outputs.names]
 
-        surrogate_model = select_model_from_sklearn(self.params_surrogate["name"])
-        surrogate_model.fit(X, y)
+        self.model.fit(X, y)

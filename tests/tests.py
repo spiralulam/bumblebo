@@ -14,6 +14,8 @@ def test_continuous_single_objective_unconstrained():
     bbo = BumbleBO(problem=test_problem, params_surrogate=params_surrogate)
 
 
+
+
 def test_wrong_surrogate_model():
 
     test_problem = Zakharov(n_inputs=3)

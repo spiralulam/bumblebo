@@ -12,6 +12,8 @@ def check_if_surrogate_model_is_in_sklearn(name_estimator):
 
 def select_model_from_sklearn(name_estimator):
 
+    check_if_surrogate_model_is_in_sklearn
+
     if name_estimator == "LinearRegression":
         return sklearn.linear_model._base.LinearRegression()
     elif name_estimator == "RandomForestRegressor":
