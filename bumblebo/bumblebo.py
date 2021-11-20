@@ -4,7 +4,7 @@ import pandas as pd
 import sklearn.base
 
 from bumblebo.optimization import build_optimization_problem, choose_optimization_algorithm
-from bumblebo.utils import select_model_from_sklearn
+from bumblebo.learning import select_model_from_sklearn
 
 
 class BumbleBO(Algorithm):
