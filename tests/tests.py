@@ -94,3 +94,7 @@ def test_all_sklearn_regressors():
 
             # This function returns None, if the model is fitted and raises an NotFittedError otherwise
             assert sklearn.utils.validation.check_is_fitted(bbo.model) is None
+
+            X_pred = bbo.problem.data[bbo.problem.inputs.names]
+            y_pred = bbo.predict(X_pred)
+            assert len(y_pred) == len(X_pred)
