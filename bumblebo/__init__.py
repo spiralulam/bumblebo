@@ -1,1 +1,1 @@
-from bumblebo.optimization import BumbleBO
+from bumblebo.bumblebo import BumbleBO
