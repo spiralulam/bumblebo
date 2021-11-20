@@ -1,5 +1,6 @@
 import numpy as np
 import opti
+import pandas as pd
 from pymoo.core.problem import Problem
 from pymoo.factory import get_algorithm
 import sklearn
@@ -26,7 +27,12 @@ class SurrogateOptimizationProblem(Problem):
     def _evaluate(self, x, out, *args, **kwargs):
         out["F"] = self.surrogate_model.predict(x)
         if self.problem_formulation.constraints:
-            out["G"] = [constraint(x) for constraint in self.problem_formulation.constraints]
+            out["G"] = np.array(
+                [
+                constraint(pd.DataFrame(x, columns=self.problem_formulation.inputs.names))
+                for constraint in self.problem_formulation.constraints
+                ]
+            ).reshape(-1, 1)
 
 
 def choose_optimization_algorithm(params_optimization: dict):
