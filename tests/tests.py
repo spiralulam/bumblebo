@@ -68,3 +68,22 @@ def test_wrong_surrogate_model():
         assert True
     else:
         assert False
+
+
+def test_all_sklearn_regressors():
+
+    test_problem = Zakharov(n_inputs=3)
+    test_problem.create_initial_data(n_samples=10)
+
+    all_sklearn_regressors = [x[0] for x in sklearn.utils.all_estimators(type_filter="regressor")]
+
+    for regressor in all_sklearn_regressors:
+
+        params_surrogate = {
+            "name": regressor
+        }
+
+        bbo = BumbleBO(problem=test_problem, params_surrogate=params_surrogate)
+
+        # This function returns None, if the model is fitted and raises an NotFittedError otherwise
+        assert sklearn.utils.validation.check_is_fitted(bbo.model) is None
