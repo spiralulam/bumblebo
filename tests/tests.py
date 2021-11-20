@@ -77,13 +77,20 @@ def test_all_sklearn_regressors():
 
     all_sklearn_regressors = [x[0] for x in sklearn.utils.all_estimators(type_filter="regressor")]
 
+    regressors_with_problems = ["IsotonicRegression", "MultiOutputRegressor", "RegressorChain", "StackingRegressor",
+                                "VotingRegressor"]
+
     for regressor in all_sklearn_regressors:
 
-        params_surrogate = {
-            "name": regressor
-        }
+        if regressor not in regressors_with_problems:
 
-        bbo = BumbleBO(problem=test_problem, params_surrogate=params_surrogate)
+            params_surrogate = {
+                "name": regressor
+            }
 
-        # This function returns None, if the model is fitted and raises an NotFittedError otherwise
-        assert sklearn.utils.validation.check_is_fitted(bbo.model) is None
+            bbo = BumbleBO(problem=test_problem, params_surrogate=params_surrogate)
+            # This function returns None, if the model is fitted and raises an NotFittedError otherwise
+            assert sklearn.utils.validation.check_is_fitted(bbo.model) is None
+
+            # This function returns None, if the model is fitted and raises an NotFittedError otherwise
+            assert sklearn.utils.validation.check_is_fitted(bbo.model) is None
