@@ -25,7 +25,9 @@ def test_continuous_single_objective_unconstrained():
     y_pred = bbo.predict(X_pred)
     assert len(y_pred) == len(X_pred)
 
-    bbo.propose()
+    X_next = bbo.propose(n_proposals=1)
+
+    assert X_next.shape == (1, 3)
 
 
 def test_continuous_single_objective_constrained():
@@ -50,7 +52,9 @@ def test_continuous_single_objective_constrained():
     y_pred = bbo.predict(X_pred)
     assert len(y_pred) == len(X_pred)
 
-    bbo.propose()
+    X_next = bbo.propose(n_proposals=1)
+
+    assert X_next.shape == (1, 3)
 
 
 def test_wrong_surrogate_model():
