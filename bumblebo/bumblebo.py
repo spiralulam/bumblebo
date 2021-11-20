@@ -3,6 +3,7 @@ import opti
 import pandas as pd
 from pymoo.optimize import minimize
 import sklearn.base
+from typing import Dict
 
 from bumblebo.optimization import choose_optimization_algorithm, SurrogateOptimizationProblem
 from bumblebo.learning import select_model_from_sklearn
@@ -28,20 +29,27 @@ class BumbleBO(Algorithm):
                 "name": "de"
             }
 
-        self.model: sklearn.base.BaseEstimator = select_model_from_sklearn(self.params_surrogate["name"])
+        self.model: Dict[str: sklearn.base.BaseEstimator] = \
+            {
+                name: select_model_from_sklearn(self.params_surrogate["name"]) for name in self.problem.outputs.names
+            }
 
         self._fit_model()
 
     def _fit_model(self) -> None:
 
         X = self.problem.data[self.problem.inputs.names]
-        y = self.problem.data[self.problem.outputs.names]
 
-        self.model.fit(X, y)
+        for name in self.problem.outputs.names:
+            y = self.problem.data[name]
+            self.model[name].fit(X, y)
 
     def predict(self, X: pd.DataFrame) -> pd.DataFrame:
 
-        return self.model.predict(X)
+        predictions = {
+            name: self.model[name].predict(X) for name in self.problem.outputs.names
+        }
+        return pd.DataFrame(predictions)
 
     def propose(self, n_proposals: int = 1) -> pd.DataFrame:
         problem = SurrogateOptimizationProblem(self.problem, self.model)

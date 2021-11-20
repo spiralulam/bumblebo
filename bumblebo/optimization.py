@@ -25,7 +25,9 @@ class SurrogateOptimizationProblem(Problem):
         super().__init__(n_var=n_var, n_obj=n_obj, n_constr=n_constr, xl=xl, xu=xu)
 
     def _evaluate(self, x, out, *args, **kwargs):
-        out["F"] = self.surrogate_model.predict(x)
+        out["F"] = np.array(
+            [self.surrogate_model[name].predict(x) for name in self.problem_formulation.outputs.names]
+        ).reshape(-1, self.n_obj)
         if self.problem_formulation.constraints:
             out["G"] = np.array(
                 [
