@@ -1,9 +1,9 @@
 from mbo.algorithm import Algorithm
 import opti
 import pandas as pd
-import pymoo as pm
 import sklearn.base
 
+from bumblebo.optimization import build_optimization_problem, choose_optimization_algorithm
 from bumblebo.utils import select_model_from_sklearn
 
 
@@ -43,12 +43,9 @@ class BumbleBO(Algorithm):
         return self.model.predict(X)
 
     def propose(self, n_proposals: int = 1) -> pd.DataFrame:
-        problem = self._build_optimization_problem()
-        algorithm = self._choose_optimization_algorithm(self.params_optimization)
+        problem = build_optimization_problem(self.problem)
+        algorithm = choose_optimization_algorithm()
         # res = pm.optimize.minimize(problem, algorithm, seed=73, verbose=True)
-
-    def _build_optimization_problem(self):
-        pass
 
     def _choose_optimization_algorithm(self, params_optimization: dict):
         pass
