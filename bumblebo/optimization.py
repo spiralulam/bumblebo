@@ -1,31 +1,34 @@
 import numpy as np
 import opti
 from pymoo.core.problem import Problem
+from pymoo.factory import get_algorithm
+import sklearn
 
 
 class SurrogateOptimizationProblem(Problem):
-    def __init__(self, n_var: int, n_obj: int, n_constr: int, xl: np.ndarray, xu: np.ndarray):
+
+    def __init__(self, problem_formulation: opti.Problem, surrogate_model: sklearn.base.BaseEstimator):
+
+        self.problem_formulation = problem_formulation
+        self.surrogate_model = surrogate_model
+
+        n_var = len(problem_formulation.inputs)
+        n_obj = len(problem_formulation.outputs)
+        if problem_formulation.constraints:
+            n_constr = len(problem_formulation.constraints)
+        else:
+            n_constr = 0
+        xl = np.array(problem_formulation.inputs.bounds.loc["min", :])
+        xu = np.array(problem_formulation.inputs.bounds.loc["max", :])
+
         super().__init__(n_var=n_var, n_obj=n_obj, n_constr=n_constr, xl=xl, xu=xu)
 
     def _evaluate(self, x, out, *args, **kwargs):
-        pass
-        # out["F"] = connect with problem.f method from opti
-        # out["G"] = connect with constraints.satisfied methods from opti
+        out["F"] = self.surrogate_model.predict(x)
+        if self.problem_formulation.constraints:
+            out["G"] = [constraint(x) for constraint in self.problem_formulation.constraints]
 
 
-def build_optimization_problem(problem_formulation: opti.Problem):
-
-    n_var = len(problem_formulation.inputs)
-    n_obj = len(problem_formulation.outputs)
-    if problem_formulation.constraints:
-        n_constr = len(problem_formulation.constraints)
-    else:
-        n_constr = 0
-    xl = np.array(problem_formulation.inputs.bounds.loc["min", :])
-    xu = np.array(problem_formulation.inputs.bounds.loc["max", :])
-
-    return SurrogateOptimizationProblem(n_var=n_var, n_obj=n_obj, n_constr=n_constr, xl=xl, xu=xu)
-
-
-def choose_optimization_algorithm():
-    pass
+def choose_optimization_algorithm(params_optimization: dict):
+    name_algorithm = params_optimization["name"]
+    return get_algorithm(name_algorithm)

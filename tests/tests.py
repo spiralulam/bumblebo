@@ -13,7 +13,7 @@ def test_continuous_single_objective_unconstrained():
     }
 
     params_optimization = {
-        "name": "GA"
+        "name": "ga"
     }
 
     bbo = BumbleBO(problem=test_problem, params_surrogate=params_surrogate, params_optimization=params_optimization)
@@ -38,7 +38,7 @@ def test_continuous_single_objective_constrained():
     }
 
     params_optimization = {
-        "name": "GA"
+        "name": "ga"
     }
 
     bbo = BumbleBO(problem=test_problem, params_surrogate=params_surrogate, params_optimization=params_optimization)
