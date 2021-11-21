@@ -2,7 +2,7 @@ import numpy as np
 import opti
 import pandas as pd
 from pymoo.core.problem import Problem
-from pymoo.factory import get_algorithm
+from pymoo.factory import get_algorithm, get_reference_directions
 import sklearn
 
 
@@ -37,6 +37,13 @@ class SurrogateOptimizationProblem(Problem):
             ).reshape(-1, 1)
 
 
-def choose_optimization_algorithm(params_optimization: dict):
+def choose_optimization_algorithm(params_optimization: dict, n_obj: int):
     name_algorithm = params_optimization["name"]
-    return get_algorithm(name_algorithm)
+
+    # These multi-objective optimization algorithms need reference directions as inputs.
+    # I know that this hard coded list is not nice, but I didn't find a better solution.
+    if name_algorithm in ["ctaea", "moead", "unsga3", "nsga3"]:
+        ref_dirs = get_reference_directions("energy", n_dim=n_obj, n_points=n_obj, seed=73)
+        return get_algorithm(name_algorithm, ref_dirs=ref_dirs)
+    else:
+        return get_algorithm(name_algorithm)

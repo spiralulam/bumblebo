@@ -67,8 +67,7 @@ def test_multi_objective_constrained():
         "name": "RandomForestRegressor"
     }
     params_optimization = {
-        "name": "moead",
-        "ref_dirs": 10
+        "name": "ctaea"
     }
 
     bbo = BumbleBO(problem=test_problem, params_surrogate=params_surrogate, params_optimization=params_optimization)
@@ -76,6 +75,8 @@ def test_multi_objective_constrained():
     # This function returns None, if the model is fitted and raises an NotFittedError otherwise
     models_fitted = [sklearn.utils.validation.check_is_fitted(m) for m in bbo.model.values()]
     assert all(v is None for v in models_fitted)
+
+    X_next = bbo.propose(n_proposals=1)
 
 
 def test_wrong_surrogate_model():

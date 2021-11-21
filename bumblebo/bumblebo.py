@@ -53,7 +53,8 @@ class BumbleBO(Algorithm):
 
     def propose(self, n_proposals: int = 1) -> pd.DataFrame:
         problem = SurrogateOptimizationProblem(self.problem, self.model)
-        algorithm = choose_optimization_algorithm(self.params_optimization)
+        n_obj = len(self.problem.outputs)
+        algorithm = choose_optimization_algorithm(self.params_optimization, n_obj)
         res = minimize(problem, algorithm, seed=73, verbose=True)
         return pd.DataFrame(res.X.reshape(-1,len(self.problem.inputs.names)), columns=self.problem.inputs.names)
 
