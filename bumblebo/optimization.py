@@ -37,7 +37,7 @@ class SurrogateOptimizationProblem(Problem):
             ).reshape(-1, self.n_constr)
 
 
-def choose_optimization_algorithm(params_optimization: dict, n_obj: int):
+def choose_optimization_algorithm(params_optimization: dict, n_obj: int = 1):
     name_algorithm = params_optimization["name"]
 
     # These multi-objective optimization algorithms need reference directions as inputs.

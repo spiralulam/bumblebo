@@ -76,7 +76,10 @@ def test_multi_objective_constrained():
     models_fitted = [sklearn.utils.validation.check_is_fitted(m) for m in bbo.model.values()]
     assert all(v is None for v in models_fitted)
 
-    X_next = bbo.propose(n_proposals=1)
+    X_pareto = bbo.predict_pareto_front()
+
+    assert X_pareto.shape[1] == len(test_problem.inputs)
+    assert X_pareto.shape[0] > 1
 
 
 def test_wrong_surrogate_model():

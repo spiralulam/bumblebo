@@ -53,8 +53,14 @@ class BumbleBO(Algorithm):
 
     def propose(self, n_proposals: int = 1) -> pd.DataFrame:
         problem = SurrogateOptimizationProblem(self.problem, self.model)
+        algorithm = choose_optimization_algorithm(self.params_optimization)
+        res = minimize(problem, algorithm, seed=73, verbose=True)
+        return pd.DataFrame(res.X.reshape(-1,len(self.problem.inputs.names)), columns=self.problem.inputs.names)
+
+    def predict_pareto_front(self, **kwargs) -> pd.DataFrame:
         n_obj = len(self.problem.outputs)
         algorithm = choose_optimization_algorithm(self.params_optimization, n_obj)
+        problem = SurrogateOptimizationProblem(self.problem, self.model)
         res = minimize(problem, algorithm, seed=73, verbose=True)
         return pd.DataFrame(res.X.reshape(-1,len(self.problem.inputs.names)), columns=self.problem.inputs.names)
 
