@@ -34,7 +34,7 @@ class SurrogateOptimizationProblem(Problem):
                 constraint(pd.DataFrame(x, columns=self.problem_formulation.inputs.names))
                 for constraint in self.problem_formulation.constraints
                 ]
-            ).reshape(-1, 1)
+            ).reshape(-1, self.n_constr)
 
 
 def choose_optimization_algorithm(params_optimization: dict, n_obj: int):
@@ -43,7 +43,7 @@ def choose_optimization_algorithm(params_optimization: dict, n_obj: int):
     # These multi-objective optimization algorithms need reference directions as inputs.
     # I know that this hard coded list is not nice, but I didn't find a better solution.
     if name_algorithm in ["ctaea", "moead", "unsga3", "nsga3"]:
-        ref_dirs = get_reference_directions("energy", n_dim=n_obj, n_points=n_obj, seed=73)
+        ref_dirs = get_reference_directions("energy", n_dim=n_obj, n_points=n_obj**2, seed=73)
         return get_algorithm(name_algorithm, ref_dirs=ref_dirs)
     else:
         return get_algorithm(name_algorithm)
